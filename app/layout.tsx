@@ -1,8 +1,21 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
-const display=Bodoni_Moda({variable:"--font-display",subsets:["latin"],weight:["400","500","600"]});
-const sans=Montserrat({variable:"--font-sans",subsets:["latin"],weight:["400","500","600","700"]});
+
+const display=localFont({
+ src:"./fonts/bodoni-moda-latin.woff2",
+ variable:"--font-display",
+ weight:"400 600",
+ display:"swap",
+ fallback:["Georgia","serif"],
+});
+const sans=localFont({
+ src:"./fonts/montserrat-latin.woff2",
+ variable:"--font-sans",
+ weight:"400 700",
+ display:"swap",
+ fallback:["Arial","sans-serif"],
+});
 const siteUrl=process.env.NEXT_PUBLIC_SITE_URL??"http://localhost:3000";
 export const metadata:Metadata={
  metadataBase:new URL(siteUrl),
