@@ -1,69 +1,60 @@
+"use client";
 import Image from "next/image";
-
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+import { useEffect,useState } from "react";
+import BookingModal from "./BookingModal";
+const heroes=[1,2,3,4,5].map(n=>"/images/herobg"+n+".png");
+const services=[
+ {name:"BelleTox",desc:"Refresh, smooth, natural.",price:"₱195 / unit",src:"/images/tresprice.jpg",pos:"9% 17%"},
+ {name:"Fat Dissolving",desc:"Refine, contour, reveal.",price:"From ₱995",src:"/images/tresprice.jpg",pos:"9% 31%"},
+ {name:"Hair Reducer",desc:"Smoother skin, longer confidence.",price:"From ₱1,495",src:"/images/tresprice.jpg",pos:"9% 45%"},
+ {name:"Laser Treatment",desc:"Clearer skin, brighter tomorrows.",price:"From ₱1,495",src:"/images/tresprice.jpg",pos:"9% 59%"},
+ {name:"Peels",desc:"Renew, reveal, glow.",price:"From ₱2,495",src:"/images/tresprice.jpg",pos:"9% 73%"},
+ {name:"Microneedling",desc:"Smoother texture, firmer skin.",price:"From ₱2,995",src:"/images/tresprice.jpg",pos:"9% 87%"},
+ {name:"Très Belle Signature",desc:"Deep cleanse. Refresh. Reveal.",price:"₱795",src:"/images/tresprice2.jpg",pos:"19% 25%"},
+ {name:"Crystal Aqua Belle",desc:"Hydrates, purifies, illuminates.",price:"₱995",src:"/images/tresprice2.jpg",pos:"19% 43%"},
+ {name:"Velvet Renewal",desc:"Advanced hydration for youthful glow.",price:"₱1,395",src:"/images/tresprice2.jpg",pos:"19% 62%"},
+ {name:"Acne Clarity",desc:"Controls oil and restores balance.",price:"₱1,995",src:"/images/tresprice2.jpg",pos:"19% 82%"},
+ {name:"Pearl Push",desc:"Radiant, even-toned skin.",price:"₱995",src:"/images/tresprice3.jpg",pos:"42% 22%"},
+ {name:"Signature Push",desc:"Beauty and immunity boost.",price:"₱1,495",src:"/images/tresprice3.jpg",pos:"42% 37%"},
+ {name:"Reset Drip",desc:"Detox and recharge.",price:"₱1,195",src:"/images/tresprice3.jpg",pos:"42% 52%"},
+ {name:"Pearl Drip",desc:"Whitening and radiance.",price:"₱1,295",src:"/images/tresprice3.jpg",pos:"42% 68%"},
+ {name:"Glowing Drip",desc:"Nourishing skin rejuvenation.",price:"₱1,595",src:"/images/tresprice3.jpg",pos:"42% 82%"}
+];
+const doctors=[
+ {image:"/images/doctor1.png",name:"Dr. Van Aldrin Ramos RN MD",role:"Aesthetic Medicine & Cosmetic Surgery",intro:"Focused on thoughtful, doctor-led aesthetic care that enhances your features while keeping results balanced and natural."},
+ {image:"/images/doctor2.png",name:"Dr. Melvic Mae Roxas MD",role:"Aesthetic Medicine & Cosmetic Surgery",intro:"Combining clinical expertise and a personal approach to create safe, considered treatment plans for every patient."}
+];
+const faqs=[
+ ["Do I need a consultation before treatment?","Yes. A consultation helps your doctor understand your goals, assess your needs, and recommend a safe, personalized plan."],
+ ["How do I book an appointment?","Call 0960 817 9045 or message Tres Belle through Facebook or Instagram. Our team will help you select an available schedule."],
+ ["Are the prices shown final?","The listed prices are starting or promotional rates from the current clinic menus. Final pricing is confirmed during consultation."],
+ ["Where is the clinic located?","Tres Belle is at Plaza Esperanza, Poblacion, Santa Maria, Bulacan 3022."],
+ ["How soon will I see results?","Timing varies by treatment and patient. Your doctor will explain expected progress, aftercare, and recommended follow-up sessions."]
+];
+function SocialIcon({type}:{type:"facebook"|"instagram"}){return type==="facebook"?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3 0-5 2-5 5v2H6v4h3v7h4v-7h3l1-4h-4V9c0-.7.3-1 1-1Z"/></svg>:<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>}
+export default function Home(){
+ const [hero,setHero]=useState(0),[doctor,setDoctor]=useState(0),[menu,setMenu]=useState(false),[bookingOpen,setBookingOpen]=useState(false);
+ useEffect(()=>{const t=window.setInterval(()=>setHero(v=>(v+1)%5),5500);return()=>clearInterval(t)},[]);
+ useEffect(()=>{const t=window.setInterval(()=>setDoctor(v=>(v+1)%doctors.length),6000);return()=>clearInterval(t)},[]);
+ useEffect(()=>{
+  const items=document.querySelectorAll("main > section:not(.hero), main > footer");
+  items.forEach(item=>item.classList.add("scroll-reveal"));
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("revealed");observer.unobserve(entry.target)}}),{threshold:.12,rootMargin:"0px 0px -70px"});
+  items.forEach(item=>observer.observe(item));
+  return()=>observer.disconnect();
+ },[]);
+ const doc=doctors[doctor];
+ return <main>
+  <BookingModal open={bookingOpen} onClose={()=>setBookingOpen(false)}/>
+  <header className="header"><a href="#home" className="logo"><Image src="/images/tresbellelogo-removebg-preview.png" alt="Tres Belle Aesthetic Clinic" width={180} height={128} priority/></a><button className="hamb" aria-label="Toggle menu" onClick={()=>setMenu(!menu)}><span/><span/></button><nav className={menu?"open":""}><div className="nav-links">{[["Home","home"],["Services","services"],["Doctors","doctors"],["Results","results"],["FAQ","faq"],["Contact","contact"]].map(x=><a key={x[1]} href={"#"+x[1]} onClick={()=>setMenu(false)}>{x[0]}</a>)}</div><div className="nav-actions"><button className="book" onClick={()=>{setBookingOpen(true);setMenu(false)}}>Book appointment</button><button className="sign-in" type="button">Sign In</button></div></nav></header>
+  <section className="hero" id="home">{heroes.map((src,i)=><Image key={src} src={src} alt={"Tres Belle treatment "+(i+1)} fill priority={i===0} sizes="100vw" className={i===hero?"active":""}/>)}<div className="hero-content"><h1>Your glow<br/>journey</h1><p>Starts <b>here.</b></p><button onClick={()=>setBookingOpen(true)} className="hero-cta">Schedule your consultation</button></div><div className="hero-nav"><button onClick={()=>setHero((hero+4)%5)} aria-label="Previous slide">←</button><span>{"0"+(hero+1)} / 05</span><button onClick={()=>setHero((hero+1)%5)} aria-label="Next slide">→</button></div></section>
+  <section className="manifesto"><span className="kicker">The Tres Belle approach</span><h2>Results that still<br/>feel like <i>you.</i></h2><p>We pair medical expertise with considered, personal care—so every treatment begins with listening and ends with a result that feels naturally yours.</p></section>
+  <section className="service-section" id="services"><div className="title-row"><div><span className="kicker light">Treatments & pricing</span><h2>Find your treatment.</h2></div><p>Explore doctor-guided treatments for skin, facial refinement, body confidence, and whole-body glow.</p></div><div className="service-gallery">{services.map((s,i)=><article className="treatment-card" key={s.name}><div className="treatment-visual" style={{backgroundImage:"url("+s.src+")",backgroundPosition:s.pos}}><span>{s.src.includes("price3")?"IV Wellness":s.src.includes("price2")?"Facial Care":"Aesthetic Care"}</span></div><div className="treatment-body"><small>{String(i+1).padStart(2,"0")}</small><h3>{s.name}</h3><p>{s.desc}</p><div><strong>{s.price}</strong><a href="tel:09608179045" aria-label={"Ask about "+s.name}>View treatment</a></div></div></article>)}</div><p className="price-note">Prices may change. Confirm the current rate and your recommended treatment during consultation.</p></section>
+  <section className="doctor-section" id="doctors"><div className="doctor-copy"><div className="doctor-label">Meet our doctors</div><div key={doctor} className="doctor-text"><h2>{doc.name}</h2><h3>{doc.role}</h3><p>{doc.intro}</p><div className="credentials"><div><span>Specialty</span><b>Aesthetic Medicine</b></div><div><span>Approach</span><b>Personalized, doctor-led care</b></div></div></div><div className="doctor-controls"><button onClick={()=>setDoctor((doctor+1)%2)} aria-label="Previous doctor">←</button><span>{"0"+(doctor+1)} / 02</span><button onClick={()=>setDoctor((doctor+1)%2)} aria-label="Next doctor">→</button></div></div><div className="doctor-portrait"><Image key={doc.image} src={doc.image} alt={doc.name} fill sizes="(max-width:800px) 100vw, 50vw"/></div></section>
+  <section className="results" id="results"><div className="results-head"><span className="kicker">Real patient result</span><h2>Before &amp; After</h2><p>Two sessions of Lemon Bottle and two sessions of Lipolab. Individual results may vary.</p></div><div className="result-marquee" aria-label="Tres Belle before and after result"><div className="result-track">{[0,1,2,3].map((item)=><figure key={item} aria-hidden={item>0}><div className="result-crop" role="img" aria-label={item===0?"Tres Belle treatment before and after":undefined}/><figcaption><span>Before</span><span>After</span></figcaption></figure>)}</div></div></section>
+  <section className="faq" id="faq"><div className="faq-title"><span className="kicker">Good to know</span><h2>Frequently asked<br/><i>questions.</i></h2></div><div className="faq-list">{faqs.map(([q,a],i)=><details key={q}><summary><span>{String(i+1).padStart(2,"0")} · {q}</span><b>+</b></summary><p>{a}</p></details>)}</div></section>
+  <section className="contact-inquiry" id="contact"><div className="inquiry-intro"><span className="kicker">Contact</span><h2>Send an inquiry</h2><p>Ask about appointments, services, consultations, or treatment recommendations.</p><a className="pill black" href="tel:09608179045">Call to book</a><div className="contact-pills"><a href="mailto:rnlrskininnovationinc@gmail.com">✉ <span>rnlrskininnovationinc@gmail.com</span></a><a className="facebook-pill" href="https://web.facebook.com/TresBelleAestheticClinic" target="_blank" rel="noreferrer"><SocialIcon type="facebook"/><span>Tres Belle Facebook</span></a><a className="instagram-pill" href="https://www.instagram.com/tresbelleaesthetic" target="_blank" rel="noreferrer"><SocialIcon type="instagram"/><span>@tresbelleaesthetic</span></a></div></div><form className="inquiry-form" action="mailto:rnlrskininnovationinc@gmail.com" method="post" encType="text/plain"><div><input name="name" placeholder="Full name" aria-label="Full name" required/><input type="email" name="email" placeholder="Email" aria-label="Email" required/></div><select name="subject" aria-label="Inquiry type" defaultValue="Appointment"><option>Appointment</option><option>Treatment inquiry</option><option>Price inquiry</option><option>Other</option></select><textarea name="message" placeholder="Message" aria-label="Message" required/><button type="submit">Submit inquiry</button></form></section>
+  <section className="location"><div className="location-bar"><div><span className="kicker">Find us here</span><h2>Tres Belle Aesthetic Clinic</h2><p>Plaza Esperanza, Poblacion, Santa Maria, Bulacan 3022</p></div><a href="https://www.google.com/maps/search/?api=1&query=Plaza+Esperanza,+Poblacion,+Santa+Maria,+Bulacan+3022" target="_blank" rel="noreferrer">Get directions →</a></div><div className="map"><iframe title="Tres Belle clinic map" loading="lazy" src="https://www.google.com/maps?q=Plaza%20Esperanza%2C%20Poblacion%2C%20Santa%20Maria%2C%20Bulacan%203022&output=embed"/></div></section>
+  <footer><div className="footer-brand"><Image src="/images/tresbellelogo-removebg-preview.png" alt="Tres Belle" width={190} height={135}/><p>Doctor-led aesthetic care, thoughtfully personalized for you.</p><div><a className="pill black" href="tel:09608179045">Book appointment</a><a className="footer-outline" href="#contact">Send inquiry</a></div></div><div className="footer-links"><h3>Quick links</h3>{[["Home","home"],["Services","services"],["Doctors","doctors"],["Results","results"],["FAQ","faq"],["Contact","contact"]].map(x=><a key={x[1]} href={"#"+x[1]}>{x[0]}</a>)}</div><div className="footer-hours"><h3>Clinic</h3><p>Plaza Esperanza, Poblacion<br/>Santa Maria, Bulacan 3022</p><p>0960 817 9045</p></div><div className="footer-social"><h3>Connect</h3><a className="facebook-pill" href="https://web.facebook.com/TresBelleAestheticClinic" target="_blank" rel="noreferrer"><SocialIcon type="facebook"/><span>Facebook</span></a><a className="instagram-pill" href="https://www.instagram.com/tresbelleaesthetic" target="_blank" rel="noreferrer"><SocialIcon type="instagram"/><span>Instagram</span></a></div><div className="copyright"><span>© {new Date().getFullYear()} Tres Belle Aesthetic Clinic</span><span>All rights reserved.</span></div></footer>
+ </main>
 }
